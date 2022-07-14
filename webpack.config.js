@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path');
+const webpack = require('webpack')
 
 module.exports = {
     entry:{
@@ -11,16 +12,37 @@ module.exports = {
         path:path.join(__dirname,'dist'),
         filename:'[name].js'
     },
-    mode:'production',
+    mode:'development',
     module:{
         rules:[
-           { test:/\.js|jsx$/ , use:{
-                loader:'babel-loader',
-                options: {
-                 presets:['@babel/preset-env']}
+           { test:/\.js$/ , use:{
+                loader:'babel-loader'   
             }
+           },
+           { test:/\.css$/ , use:[
+                'style-loader',
+                'css-loader' ,
+                
+           ]
+        },
+           { test:/\.less$/ , use:[
+                'style-loader',
+                'css-loader' ,
+                'less-loader'
+                
+           ]
+        },{
+            test:/.(png|jpg|gif|jpeg)$/,
+            use:'file-loader'     
         }
-    
         ]
-    }
-}
+    },
+        plugins:[
+            new webpack.HotModuleReplacementPlugin()
+        ],
+        devServer:{
+            contentBase:'./dist',
+            hot:true
+        }
+                    
+                }
